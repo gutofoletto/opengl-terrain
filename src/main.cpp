@@ -33,7 +33,7 @@ float aspect = 1.0f;
 
 int r, c;
 
-Terrain *t = new Terrain(20, 20);
+Terrain *t = new Terrain(50, 50);
 
 
 
@@ -49,6 +49,10 @@ void init() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING) ;
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    //glColorMaterial(GL_FRONT,GL_DIFFUSE);
 }
 
 void display(void) {
@@ -73,18 +77,23 @@ void display(void) {
 
     glColor3f(1, 1, 1);
     glBegin(GL_QUADS);
-        r = -(t->rows/2);
-        for(int x = 0; x < t->rows-1; x++){
-            c = -(t->cols/2);
-            for(int z = 0; z < t->cols-1; z++){
-                glVertex3f(r, t->points[x][z], c);
-                glVertex3f(r+1, t->points[x+1][z], c);
-                glVertex3f(r+1, t->points[x+1][z+1], c+1);
-                glVertex3f(r, t->points[x][z+1], c+1);
-                c++;
-            }
-            r++;
+    glColor3f(.1, .9, .1);
+    r = -(t->rows/2);
+    for(int x = 0; x < t->rows-1; x++){
+        c = -(t->cols/2);
+        for(int z = 0; z < t->cols-1; z++){
+            glNormal3f(0, t->points[x][z], 0);
+            glVertex3f(r, t->points[x][z], c);
+            //glNormal3f(0, t->points[x+1][z], 0);
+            glVertex3f(r+1, t->points[x+1][z], c);
+            //glNormal3f(0, t->points[x+1][z+1], 0);
+            glVertex3f(r+1, t->points[x+1][z+1], c+1);
+            //glNormal3f(0, t->points[x][z+1], 0);
+            glVertex3f(r, t->points[x][z+1], c+1);
+            c++;
         }
+        r++;
+    }
     glEnd();
 
     glutSwapBuffers();
@@ -93,34 +102,45 @@ void display(void) {
 
 //faz a leitura da entrada do usuario
 void keyboard(unsigned char key, int x, int y) {
-    //printf("%c", key);
-    key = tolower(key);
+    //printf("%d", key);
+    //key = tolower(key);
     switch(key)
     {
         case 27:
-        exit(0);
-        break;
-
-        case 'w': //wireframe
-        if(polygonMode==1)
-        {
-            polygonMode=0;
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
-        else
-        {
-            polygonMode=1;
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-        break;
+            exit(0);
+            break;
+        case 200:
+            //left
+            break;
+        case 201:
+            //up
+            break;
+        case 202:
+            //right
+            break;
+        case 203:
+            //down
+            break;
+        case 'w':
+            //wireframe
+            if(polygonMode==1) {
+                polygonMode=0;
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
+            else{
+                polygonMode=1;
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            } break;
         case '+':
-        abertura+=1;
-
+            abertura++;
+            break;
+        case '-':
+            abertura--;
+            break;
     }
 }
 
 void MotionFunc(int x, int y) {
-    float dx, dy;
     rx = x;
     rz = y;
 }
@@ -140,7 +160,6 @@ int main () {
     glutInitWindowPosition (450, 10);
     /* create window */
     glutCreateWindow ("Terrain OpenGL");
-    //init();
     printf("Digite W para mudar o modo de visualizacao: wireframe/fill");
 
     glutDisplayFunc(display);
@@ -149,6 +168,7 @@ int main () {
     glutIdleFunc(display);
     glutKeyboardFunc(keyboard);
 
+    init();
     glutMainLoop();
     return 0;
 }

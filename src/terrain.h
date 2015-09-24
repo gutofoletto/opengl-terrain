@@ -24,14 +24,5 @@ class Terrain{
                     points[r].push_back(y);
                 }
             }
-
-            //faz um pico no meio do terreno
-            points[rows/2][cols/2] = 4.0f;
-            points[rows/2][cols/2-1] = 2.0f;
-            points[rows/2-1][cols/2-1] = 2.0f;
-            points[rows/2-1][cols/2] = 2.0f;
-            points[rows/2][cols/2+1] = 2.0f;
-            points[rows/2+1][cols/2+1] = 2.0f;
-            points[rows/2+1][cols/2] = 2.0f;
         }
 };
